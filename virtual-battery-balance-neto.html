@@ -1,0 +1,31 @@
+<script type="text/javascript">
+    RED.nodes.registerType('virtual-battery-balance-neto',{
+        category: 'virtual-battery',
+        color: '#DAA520',
+        defaults: {
+            resetTimeout:{value:"60000",required:true}
+        }, 
+        inputs:1,
+        outputs:1,
+        icon: "feed.svg",
+        label: function() {
+            return this.name||"virtual-battery-balance-neto";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="virtual-battery-balance-neto">
+    <div class="form-row">
+        <label for="node-input-mainBucketDuration"><i class="fa fa-tag"></i> Minutes duration of the bucket</label>
+        <input type="number" id="node-input-mainBucketDuration" value="0">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-subBucketDuration"><i class="fa fa-tag"></i> Minutes duration of the internal buckets</label>
+        <input type="number" id="node-input-subBucketDuration" value="0">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="virtual-battery-balance-neto-horario">
+    <p>A simple node to gruoup battery slots into a Bucket </p>
+</script>

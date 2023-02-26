@@ -1,0 +1,38 @@
+{
+  "name": "@virtualbat/balance-neto",
+  "version": "1.0.0",
+  "description": "Bucket to process energy readings",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wapophis/node-red-contrib-virtual-battery-balance-neto.git"
+  },
+  "keywords": [
+    "node-red",
+    "balace",
+    "neto"
+  ],
+  "node-red": {
+    "nodes": {
+      "virtual-battery-balance-neto-horario": "virtual-battery-balance-neto.js"    
+    },"version": ">=2.0.0"
+  },
+  "author": "Luis Martínez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wapophis/node-red-contrib-virtual-battery-balance-neto/issues"
+  },
+  "homepage": "https://github.com/wapophis/node-red-contrib-virtual-battery-balance-neto#readme",
+  "dependencies": {
+    "@js-joda/core": "^5.2.0",
+    "collections": "^5.1.13",
+    "@virtualbat/entities": "1.0.8"
+  }
+  ,"devDependencies": {
+    "typescript": "^4.7.4"
+  }
+
+}
