@@ -1,13 +1,13 @@
 const { LocalDate } = require("@js-joda/core");
 const List = require("collections/list");
 const LocalDateTime= require("@js-joda/core").LocalDateTime;
-const NodeBalanceNetoHorario=require("./build/NodeBalanceNeto.js");
+const NodeBalanceNeto=require("./build/NodeBalanceNeto.js");
 
 
 module.exports = function(RED) {
     
 
-    function VirtualBatteryBalanceNetoHorarioNode(config) {
+    function VirtualBatteryBalanceNetoNode(config) {
         
         var balance=null;
       
@@ -17,23 +17,20 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config);
         node=this;
         nodeContext= this.context();
-        var nodeBalanceNetoHorario=new NodeBalanceNetoHorario.NodeBalanceNetoHorario(node,config);
-        nodeBalanceNetoHorario.setNodeContext(nodeContext);
+        var nodeBalanceNeto=new NodeBalanceNeto.NodeBalanceNeto(node,config,nodeContext);
 
-        node.log("INIT");
-
-        nodeBalanceNetoHorario.unSerialize();
+        nodeBalanceNeto.readFromContext();
 
         this.on('close', function() {
-            nodeBalanceNetoHorario.serialize();
+            nodeBalanceNeto.writeOnContext();
            });
         
         node.on('input',function(msg, send, done){
-            nodeBalanceNetoHorario.onInput(msg,send,done);
+            nodeBalanceNeto.onInput(msg,send,done);
          
         });
     }    
 
    
-    RED.nodes.registerType("virtual-battery-balance-neto-horario",VirtualBatteryBalanceNetoHorarioNode);
+    RED.nodes.registerType("virtual-battery-balance-neto",VirtualBatteryBalanceNetoNode);
 }

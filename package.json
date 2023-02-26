@@ -17,8 +17,9 @@
   ],
   "node-red": {
     "nodes": {
-      "virtual-battery-balance-neto-horario": "virtual-battery-balance-neto.js"    
-    },"version": ">=2.0.0"
+      "virtual-battery-balance-neto": "virtual-battery-balance-neto.js"
+    },
+    "version": ">=2.0.0"
   },
   "author": "Luis Martínez",
   "license": "ISC",
@@ -28,11 +29,10 @@
   "homepage": "https://github.com/wapophis/node-red-contrib-virtual-battery-balance-neto#readme",
   "dependencies": {
     "@js-joda/core": "^5.2.0",
-    "collections": "^5.1.13",
-    "@virtualbat/entities": "1.0.8"
-  }
-  ,"devDependencies": {
+    "@virtualbat/entities": "file:../node-red-contrib-virtual-battery-entities",
+    "collections": "^5.1.13"
+  },
+  "devDependencies": {
     "typescript": "^4.7.4"
   }
-
 }
