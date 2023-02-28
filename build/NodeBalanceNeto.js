@@ -20,11 +20,34 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
      */
     onInput(msg, send, done) {
         this.node.log("INPUT RECEIVED");
-        this.addBatterySlot(new BatterySlot_1.BatterySlot(msg.payload));
+        try {
+            this.addBatterySlot(new BatterySlot_1.BatterySlot(msg.payload));
+            this.node.status({ fill: "green", shape: "dot", text: "Working fine. In bucket " + this.batterySlots.length });
+        }
+        catch (error) {
+            this.node.status({ fill: "red", shape: "dot", text: error });
+            throw error;
+        }
+        let oVal = { payload: {} };
+        if (this.isConsolidable() === true) {
+            oVal.payload = this.get();
+            send(oVal);
+            this.batterySlots = new Array();
+            this.consolidable = false;
+            this.setDuration(Number(this.config.mainBucketDuration));
+        }
+        else {
+        }
     }
     writeOnContext() {
+        this.context.set("balanceNeto", JSON.stringify(this.get()));
     }
     readFromContext() {
+        if (this.context.get("balanceNeto") !== undefined) {
+            let payloadSer = JSON.parse(this.context.get("balanceNeto"));
+            let oval = payloadSer;
+            this.of(oval);
+        }
     }
 }
 exports.NodeBalanceNeto = NodeBalanceNeto;
