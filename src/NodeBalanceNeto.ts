@@ -16,12 +16,14 @@ export class NodeBalanceNeto extends BalanceNeto{
     node:any;
     config:NodeBalanceNetoConfig;
     context:any;
+    currentSubBucketIndex:number=0;
 
     constructor(node:any,config:any,nodeContext:any){
         super(undefined);
         this.config=config;
         this.node=node;
         this.context=nodeContext;
+        this.readFromContext();
         this.setDuration(Number(this.config.mainBucketDuration));
         node.log(JSON.stringify({event:"INIT",node:this.node,config:this.config}));
     }
@@ -42,18 +44,25 @@ export class NodeBalanceNeto extends BalanceNeto{
             this.node.status({fill:"red",shape:"dot",text:error});
             throw error;
         }
-        let oVal={payload:{
+        let oVal={payload:{}};
 
-        }};
+        if(this.getCurrentSubBucketIndex(Number(this.config.subBucketDuration))!==this.currentSubBucketIndex){
+            /// output
+            this.currentSubBucketIndex=this.getCurrentSubBucketIndex(Number(this.config.subBucketDuration));
+            oVal.payload=this.getSerializedSubBucket(this.currentSubBucketIndex,Number(this.config.subBucketDuration));
+            send(oVal);
+        }
+
         if(this.isConsolidable()===true){
             oVal.payload=this.get();
             send(oVal);
             this.batterySlots=new Array<BatterySlot>();
             this.consolidable=false;
             this.setDuration(Number(this.config.mainBucketDuration));
-        }else{
-            
         }
+
+
+        this.writeOnContext();
     }
 
 

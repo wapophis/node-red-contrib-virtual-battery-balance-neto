@@ -6,9 +6,11 @@ const BatterySlot_1 = require("@virtualbat/entities/dist/src/BatterySlot");
 class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
     constructor(node, config, nodeContext) {
         super(undefined);
+        this.currentSubBucketIndex = 0;
         this.config = config;
         this.node = node;
         this.context = nodeContext;
+        this.readFromContext();
         this.setDuration(Number(this.config.mainBucketDuration));
         node.log(JSON.stringify({ event: "INIT", node: this.node, config: this.config }));
     }
@@ -28,7 +30,13 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
             this.node.status({ fill: "red", shape: "dot", text: error });
             throw error;
         }
-        let oVal = { payload: {} };
+        let oVal =  { payload: {} };
+        if (this.getCurrentSubBucketIndex(Number(this.config.subBucketDuration)) !== this.currentSubBucketIndex) {
+            /// output
+            this.currentSubBucketIndex = this.getCurrentSubBucketIndex(Number(this.config.subBucketDuration));
+            oVal.payload = this.getSerializedSubBucket(this.currentSubBucketIndex, Number(this.config.subBucketDuration));
+             send(oVal);
+        }
         if (this.isConsolidable() === true) {
             oVal.payload = this.get();
             send(oVal);
@@ -36,8 +44,7 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
             this.consolidable = false;
             this.setDuration(Number(this.config.mainBucketDuration));
         }
-        else {
-        }
+        this. writeOnContext();
     }
     writeOnContext() {
         this.context.set("balanceNeto", JSON.stringify(this.get()));
