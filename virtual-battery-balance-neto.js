@@ -7,10 +7,7 @@ const NodeBalanceNeto=require("./build/NodeBalanceNeto.js");
 module.exports = function(RED) {
     
 
-    function VirtualBatteryBalanceNetoNode(config) {
-        
-        var balance=null;
-      
+    function VirtualBatteryBalanceNetoNode(config) {     
         var node;
         var nodeContext;
 
@@ -19,15 +16,16 @@ module.exports = function(RED) {
         nodeContext= this.context();
         var nodeBalanceNeto=new NodeBalanceNeto.NodeBalanceNeto(node,config,nodeContext);
 
-        nodeBalanceNeto.readFromContext();
+       // nodeBalanceNeto.readFromContext();
 
         this.on('close', function() {
             nodeBalanceNeto.writeOnContext();
            });
         
-        node.on('input',function(msg, send, done){
+        this.on('input',function(msg, send, done){
             nodeBalanceNeto.onInput(msg,send,done);
-         
+          //  nodeBalanceNeto.writeOnContext();
+            done();
         });
     }    
 

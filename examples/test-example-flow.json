@@ -1,0 +1,109 @@
+[
+    {
+        "id": "32426157ff66a52a",
+        "type": "tab",
+        "label": "Test virtual-bat-balance-neto",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "57d29f9db43d86f5",
+        "type": "virtual-battery-balance-neto",
+        "z": "32426157ff66a52a",
+        "mainBucketDuration": "60",
+        "subBucketDuration": "0",
+        "incomingSlotsReadingTimeStampOffset": "1",
+        "x": 700,
+        "y": 300,
+        "wires": [
+            [
+                "94c46d132b885adb"
+            ]
+        ]
+    },
+    {
+        "id": "22da80735e66df9b",
+        "type": "looptimer",
+        "z": "32426157ff66a52a",
+        "duration": "5",
+        "units": "Second",
+        "maxloops": "100",
+        "maxtimeout": "1",
+        "maxtimeoutunits": "Hour",
+        "name": "looper",
+        "x": 190,
+        "y": 280,
+        "wires": [
+            [
+                "b77723fb9a1edf22"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b77723fb9a1edf22",
+        "type": "function",
+        "z": "32426157ff66a52a",
+        "name": "",
+        "func": "msg.payload={\n        \"readTimeStamp\":new Date().toISOString().slice(0,-5),\n        \"length\":300000,\n        \"producedInWatsH\":(Math.random()*5354),\n        \"feededInWatsH\":(Math.random()*4881),\n        \"consumedInWatsH\":(Math.random()*473)\n  }\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 260,
+        "wires": [
+            [
+                "57d29f9db43d86f5",
+                "94c46d132b885adb"
+            ]
+        ]
+    },
+    {
+        "id": "89c44598e4a6b9a9",
+        "type": "inject",
+        "z": "32426157ff66a52a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "22da80735e66df9b"
+            ]
+        ]
+    },
+    {
+        "id": "94c46d132b885adb",
+        "type": "debug",
+        "z": "32426157ff66a52a",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 400,
+        "wires": []
+    }
+]
