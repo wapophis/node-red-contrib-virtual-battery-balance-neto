@@ -7,7 +7,9 @@ export enum TimeUnits{
 }
 export type NodeBalanceNetoConfig={
     mainBucketDuration:number,
+    mainBucketChronoUnit:string,
     subBucketDuration:number,
+    subBucketChronoUnit:string,
     incomingSlotsReadingTimeStampOffset:number
 }
 
@@ -34,7 +36,7 @@ export class NodeBalanceNeto extends BalanceNeto{
             node.error(e);
         }
         
-        this.setDuration(Number(this.config.mainBucketDuration),BalanceNeto.getDurationChronoUnit("minutes"));
+        this.setDuration(Number(this.config.mainBucketDuration),BalanceNeto.getDurationChronoUnit(this.config.mainBucketChronoUnit));
         this.setSlotOffset(Number(this.config.incomingSlotsReadingTimeStampOffset));
         //this.setSlotOffset(1);
         node.log(JSON.stringify({event:"INIT",node:this.node,config:this.config}));
@@ -51,6 +53,7 @@ export class NodeBalanceNeto extends BalanceNeto{
         this.node.log("INPUT RECEIVED");
         try{
             this.addBatterySlot(new BatterySlot(msg.payload));
+            
             this.node.status({fill:"green",shape:"dot",text:"Working fine. In bucket "+this.batterySlots.length});
         
             let oVal={payload:{}};
@@ -98,7 +101,7 @@ export class NodeBalanceNeto extends BalanceNeto{
      */
       getImportedFromGridInSubBuckets(divisor:number):number{
         let count=0;
-        this.getFeededInSlotsOf(this.config.subBucketDuration,TimeUnits.MINUTE).filter((subBucket:ResultSlot)=>{
+        this.getFeededInSlotsOf(this.config.subBucketDuration,this.config.subBucketChronoUnit).filter((subBucket:ResultSlot)=>{
             return subBucket.value<0;
         }).forEach(function(item:ResultSlot){
             count+=item.value;
@@ -117,7 +120,7 @@ export class NodeBalanceNeto extends BalanceNeto{
      */
     getExportedToGridInSubBuckets(divisor:number):number{
         let count=0;
-        this.getFeededInSlotsOf(this.config.subBucketDuration,TimeUnits.MINUTE).filter((subBucket:ResultSlot)=>{
+        this.getFeededInSlotsOf(this.config.subBucketDuration,this.config.subBucketChronoUnit).filter((subBucket:ResultSlot)=>{
             return subBucket.value>0;
         }).forEach(function(item:ResultSlot){
             count+=item.value;

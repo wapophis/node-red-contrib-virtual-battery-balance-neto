@@ -1,18 +1,47 @@
 <script type="text/javascript">
      function onEditPrepare(node) {
-        $("#node-input-mainBucketDuration").typedInput({
-          type:"msg",
-          types:["msg", "flow","global"],
-            typeField: "#node-input-mainBucketDuration-type"
-        });
-     }
+        $("#node-input-mainBucketChronoUnit").typedInput({
+          types: [
+        {
+            value: "fruit",
+            options: [
+                { value: "minutes", label: "Minutes"},
+                { value: "hours", label: "Hours"},
+                { value: "days", label: "Days"},
+                { value: "weeks", label: "Weeks"},
+                { value: "months", label: "Months"},
+                { value: "years", label: "Years"},
+            ]
+        }
+        ]
+    });
+
+    $("#node-input-subBucketChronoUnit").typedInput({
+          types: [
+        {
+            value: "subBucketDurationUnitTime",
+            options: [
+                { value: "minutes", label: "Minutes"},
+                { value: "hours", label: "Hours"},
+                { value: "days", label: "Days"},
+                { value: "weeks", label: "Weeks"},
+                { value: "months", label: "Months"},
+                { value: "years", label: "Years"},
+            ]
+        }
+        ]
+    });
+    
+    }
 
     RED.nodes.registerType('virtual-battery-balance-neto',{
         category: 'virtual-battery',
         color: '#DAA520',
         defaults: {
             mainBucketDuration:{value:"60",required:true},
+            mainBucketChronoUnit:{value:"minutes",required:true},
             subBucketDuration:{value:"0",required:false},
+            subBucketChronoUnit:{value:"minutes",required:true},
             incomingSlotsReadingTimeStampOffset:{value:"0",required:false},
             name:{value:""}
         }, 
@@ -33,9 +62,10 @@
         <input type="text" id="node-input-name" value="">
     </div>
 
-    <div class="form-row">
-        <input type="number" id="node-input-mainBucketDuration" value="0">
-        <input type="hidden" id="node-input-mainBucketDuration-unitTime">
+    <div class="form-row" style="display: flex">
+        <label for="node-input-mainBucketDuration"><i class="fa fa-clock-o"></i> Bucket duration</label>
+            <input type="number" id="node-input-mainBucketDuration" value="0">
+            <input type="text" id="node-input-mainBucketChronoUnit">
     </div>
 
     <!-- <div class="form-row">
@@ -43,13 +73,14 @@
         <input type="number" id="node-input-mainBucketDuration" value="0">
     </div> -->
 
-    <div class="form-row">
-        <label for="node-input-subBucketDuration"><i class="fa fa-tag"></i> Update data each "n" minutes</label>
+    <div class="form-row" style="display: flex">
+        <label for="node-input-subBucketDuration"><i class="fa fa-bar-chart"></i> Internal buckets duration</label>
         <input type="number" id="node-input-subBucketDuration" value="0">
+        <input type="text" id="node-input-subBucketChronoUnit">
     </div>
 
     <div class="form-row">
-        <label for="node-input-incomingSlotsReadingTimeStampOffset"><i class="fa fa-tag"></i>Incoming data has offset in hours</label>
+        <label for="node-input-incomingSlotsReadingTimeStampOffset"><i class="fa fa-hourglass"></i> Incoming data has offset in hours</label>
         <input type="number" id="node-input-incomingSlotsReadingTimeStampOffset" value="0">
     </div>
 </script>
