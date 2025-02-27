@@ -59,11 +59,19 @@ export class NodeBalanceNeto extends BalanceNeto{
             let oVal={payload:{}};
 
             if(this.isConsolidable()===true){
+                let lastBatterySlot=this.batterySlots.pop();
                 oVal.payload=this.get();
                 send(oVal);
                 this.batterySlots=new Array<BatterySlot>();
                 this.consolidable=false;
                 this.setDuration(Number(this.config.mainBucketDuration),BalanceNeto.getDurationChronoUnit("minutes"));
+                
+                if(lastBatterySlot!==undefined){
+                    this.addBatterySlot(lastBatterySlot);
+                }else{
+                    this.node.status({fill: "red",shape:"dot",text:"Last batteryslot has benn losted.."});
+                }
+                
             }else{
                 oVal.payload=this.get();
                 send(oVal);

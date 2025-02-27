@@ -1,6 +1,6 @@
 {
   "name": "@virtualbat/balance-neto",
-  "version": "1.0.2-SNAPSHOT",
+  "version": "1.0.3-SNAPSHOT",
   "description": "Bucket to process energy readings",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/wapophis/node-red-contrib-virtual-battery-balance-neto#readme",
   "dependencies": {
-    "@virtualbat/entities": "file:../node-red-contrib-virtual-battery-entities",
+    "@virtualbat/entities": "1.0.12-SNAPSHOT",
     "collections": "^5.1.13"
   },
   "devDependencies": {
