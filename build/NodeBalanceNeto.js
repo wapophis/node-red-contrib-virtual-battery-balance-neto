@@ -20,7 +20,7 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
         catch (e) {
             node.error(e);
         }
-        this.setDuration(Number(this.config.mainBucketDuration), BalanceNeto_js_1.BalanceNeto.getDurationChronoUnit("minutes"));
+        this.setDuration(Number(this.config.mainBucketDuration), BalanceNeto_js_1.BalanceNeto.getDurationChronoUnit(this.config.mainBucketChronoUnit));
         this.setSlotOffset(Number(this.config.incomingSlotsReadingTimeStampOffset));
         //this.setSlotOffset(1);
         node.log(JSON.stringify({ event: "INIT", node: this.node, config: this.config }));
@@ -38,11 +38,18 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
             this.node.status({ fill: "green", shape: "dot", text: "Working fine. In bucket " + this.batterySlots.length });
             let oVal = { payload: {} };
             if (this.isConsolidable() === true) {
+                let lastBatterySlot = this.batterySlots.pop();
                 oVal.payload = this.get();
                 send(oVal);
                 this.batterySlots = new Array();
                 this.consolidable = false;
                 this.setDuration(Number(this.config.mainBucketDuration), BalanceNeto_js_1.BalanceNeto.getDurationChronoUnit("minutes"));
+                if (lastBatterySlot !== undefined) {
+                    this.addBatterySlot(lastBatterySlot);
+                }
+                else {
+                    this.node.status({ fill: "red", shape: "dot", text: "Last batteryslot has benn losted.." });
+                }
             }
             else {
                 oVal.payload = this.get();
@@ -76,7 +83,7 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
    */
     getImportedFromGridInSubBuckets(divisor) {
         let count = 0;
-        this.getFeededInSlotsOf(this.config.subBucketDuration, TimeUnits.MINUTE).filter((subBucket) => {
+        this.getFeededInSlotsOf(this.config.subBucketDuration, this.config.subBucketChronoUnit).filter((subBucket) => {
             return subBucket.value < 0;
         }).forEach(function (item) {
             count += item.value;
@@ -94,7 +101,7 @@ class NodeBalanceNeto extends BalanceNeto_js_1.BalanceNeto {
      */
     getExportedToGridInSubBuckets(divisor) {
         let count = 0;
-        this.getFeededInSlotsOf(this.config.subBucketDuration, TimeUnits.MINUTE).filter((subBucket) => {
+        this.getFeededInSlotsOf(this.config.subBucketDuration, this.config.subBucketChronoUnit).filter((subBucket) => {
             return subBucket.value > 0;
         }).forEach(function (item) {
             count += item.value;
