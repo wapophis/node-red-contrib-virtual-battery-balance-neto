@@ -67,7 +67,8 @@ export class NodeBalanceNeto extends BalanceNeto{
                 this.setDuration(Number(this.config.mainBucketDuration),BalanceNeto.getDurationChronoUnit("minutes"));
                 
                 if(lastBatterySlot!==undefined){
-                    this.addBatterySlot(lastBatterySlot);
+                    this.batterySlots.push(lastBatterySlot);
+                    this._autoConsolidate();
                 }else{
                     this.node.status({fill: "red",shape:"dot",text:"Last batteryslot has benn losted.."});
                 }
