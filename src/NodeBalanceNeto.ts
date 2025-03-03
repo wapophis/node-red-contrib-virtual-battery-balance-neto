@@ -54,7 +54,7 @@ export class NodeBalanceNeto extends BalanceNeto{
         try{
             this.addBatterySlot(new BatterySlot(msg.payload));
             
-            this.node.status({fill:"green",shape:"dot",text:"Working fine. In bucket "+this.batterySlots.length});
+            this.notifyToUserOnFlow();
         
             let oVal={payload:{}};
 
@@ -69,6 +69,9 @@ export class NodeBalanceNeto extends BalanceNeto{
                 if(lastBatterySlot!==undefined){
                     this.batterySlots.push(lastBatterySlot);
                     this._autoConsolidate();
+                    oVal.payload=this.get();
+                    send(oVal);
+                    this.notifyToUserOnFlow();
                 }else{
                     this.node.status({fill: "red",shape:"dot",text:"Last batteryslot has benn losted.."});
                 }
@@ -149,5 +152,9 @@ export class NodeBalanceNeto extends BalanceNeto{
         
         }
         return {balanceNeto:Object.assign(oVal.balanceNeto,newData)};
+    }
+
+    notifyToUserOnFlow(){
+        this.node.status({fill:"green",shape:"dot",text:"Working fine. In bucket "+this.batterySlots.length});
     }
 }
